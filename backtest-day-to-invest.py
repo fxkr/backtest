@@ -73,14 +73,14 @@ def strategy3(is_valid_day, *args, **kwargs):
                 break
     return investments
 
-# Strategy: invest on worst (highest) day each month (or whatever next possible day is)
+# Strategy: invest on worst (highest) day each month
 def strategy4(is_valid_day, get_price, *args, **kwargs):
     """Highest"""
     investments = []
     for i in range(2009, 2019):
         for j in range(1, 13):
-            best_dt = None
-            best_price = None
+            worst_dt = None
+            worst_price = None
             for k in range(1, 31+1):
                 try:
                     dt = datetime.date(i, j, k)
@@ -89,16 +89,16 @@ def strategy4(is_valid_day, get_price, *args, **kwargs):
                 if not is_valid_day(dt):
                     continue
                 price = get_price(dt)
-                if best_dt is None or best_price is None:
-                    best_dt = dt
-                    best_price = price
-                elif price > best_price:
-                    best_dt = dt
-                    best_price = price
-            investments.append([best_dt, 1000])
+                if worst_dt is None or worst_price is None:
+                    worst_dt = dt
+                    worst_price = price
+                elif price > worst_price:
+                    worst_dt = dt
+                    worst_price = price
+            investments.append([worst_dt, 1000])
     return investments
 
-# Strategy: invest on best (lowest) day each month (or whatever next possible day is)
+# Strategy: invest on best (lowest) day each month
 def strategy5(is_valid_day, get_price, *args, **kwargs):
     """Lowest"""
     investments = []
@@ -130,7 +130,6 @@ all_days = stock.filter(items=[])
 report = all_days
 
 strategies = [strategy1, strategy2, strategy3, strategy4, strategy5]
-#strategies = [strategy4]
 
 for i, strategy in enumerate(strategies):
     strategy_name = strategy.__doc__
